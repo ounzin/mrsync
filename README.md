@@ -1,2 +1,2 @@
 # mrsync
-school rsync project with Yanis Allouche
+school rsync project with Yanis Allouche, started 29/03/2021
