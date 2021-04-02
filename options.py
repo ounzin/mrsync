@@ -75,6 +75,73 @@ parser.add_argument(
     help=" preserve times",
 )
 
+parser.add_argument(
+    "--existing",
+    action="store_true",
+    help="skip creating new files on receiver",
+)
+
+parser.add_argument(
+    "--ignore-existing",
+    action="store_true",
+    help="skip updating files that exist on receiver",
+)
+
+parser.add_argument(
+    "--delete",
+    action="store_true",
+    help="delete extraneous files from dest dirs",
+)
+
+parser.add_argument(
+    "--force",
+    action="store_true",
+    help="force deletion of dirs even if not empty",
+)
+
+
+parser.add_argument(
+    "--timeout=TIME",
+    action="store_true",
+    help="set I/O timeout in seconds",
+)
+
+parser.add_argument(
+    "--blocking-io",
+    action="store_true",
+    help="use blocking I/O for the remote shell",
+)
+
+parser.add_argument(
+    "-I",
+    "--ignore-times",
+    action="store_true",
+    help=" don't skip files that match size and time",
+)
+
+parser.add_argument(
+    "--size-only",
+    action="store_true",
+    help="skip files that match in size",
+)
+
+parser.add_argument(
+    "--address=ADDRESS",
+    action="store_true",
+    help="bind address for outgoing socket to daemon",
+)
+
+parser.add_argument(
+    "--port=PORT",
+    action="store_true",
+    help="specify double-colon alternate port number",
+)
+
+parser.add_argument(
+    "--list-only",
+    action="store_true",
+    help="list the files instead of copying them",
+)
 
 parser.add_argument(
     "SRC",
