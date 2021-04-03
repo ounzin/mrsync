@@ -15,6 +15,7 @@ def ls(a):
 def lister(addr_source):
     filelist = []
     current = ls(addr_source)
+
     for i in range(len(current)):
         inner_path = os.path.join(addr_source,current[i])
         #print (inner_path)
