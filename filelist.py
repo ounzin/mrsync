@@ -14,31 +14,24 @@ def ls(a):
 
 def lister(addr_source):
     filelist = []
-    if os.path.isfile(addr_source):
-        a = os.path.basename(addr_source)
-        filelist.append(a)
- 
-    elif os.path.islink(addr_source):
-        print("link")
+    current = ls(addr_source)
+    for i in range(len(current)):
+        inner_path = os.path.join(addr_source,current[i])
+        #print (inner_path)
+        if os.path.isfile(inner_path):
+            a = os.path.basename(inner_path)  
+            filelist.append(a)
+        elif os.path.islink(inner_path): # a verifier avec le prof
+            realink = os.path.realpath(inner_path)
+            print(realink)
+            subdir1 = lister(realink)
+            for i in range(len(subdir1)):
+                filelist.append(subdir1[i])
 
-    elif os.path.isdir(addr_source):
-        inner_dir = []
-        pid = os.fork()
-        if pid == 0:
-            inner_dir = ls(addr_source)
-            #parent_dir = os.getcwd()
-            for i in range(len(inner_dir)):
-                inner_path = os.path.join(addr_source,inner_dir[i])
-                a = lister(inner_path)
-                filelist.append(a)
-            sys.exit(0)
+        elif os.path.isdir(inner_path):
+            subdir2 = lister(inner_path)
+            for i in range(len(subdir2)):
+                filelist.append(subdir2[i])
         else:
-            pid_wait, status = os.waitpid(-1,0)
-    else:
-        pass
+            pass
     return filelist
-    
-A = lister(SRC)
-print(A)
-#lister(SRC)
-#print(ls(SRC))
