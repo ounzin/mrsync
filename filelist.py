@@ -57,5 +57,3 @@ def lister(addr_source):
             pass
     
     return filelist
-
-print(lister(SRC))
