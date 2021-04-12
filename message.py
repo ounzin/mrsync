@@ -9,9 +9,10 @@ def send(fd,tag,v): # fd : file descriptor, tag : nature of message
     #
     size_m = info_out.__sizeof__()
     info_out = pickle.dumps(info_out)
+    size_m = len(info_out)
     size_m = size_m.to_bytes(3,byteorder='little')
+    print(size_m)
     os.write(fd,size_m)
-    time.sleep(1)
     os.write(fd,info_out)
 
 
@@ -30,9 +31,8 @@ def receive(fd):
     elif size_buff != 0:
         receive_out = os.read(fd,size_buff)
         s = pickle.loads(receive_out)
-        tag == s[0]
-        msg == s[1]
-        time.sleep(2)
+        tag = s[0]
+        msg = s[1]
     return tag,msg
 
             

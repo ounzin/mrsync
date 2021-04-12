@@ -17,7 +17,6 @@ os.mkfifo(write_path)
 rf = os.open(read_path, os.O_RDONLY)
 wf = os.open(write_path, os.O_SYNC | os.O_CREAT | os.O_RDWR)
 
-
 message.receive(rf)
 
 os.close(rf)

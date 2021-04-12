@@ -16,7 +16,7 @@ rf = os.open(read_path,os.O_RDONLY)
 A = ['bonjour','bonsoir','bonsoir','bonsoir','bonsoir',]
 B = lister(SRC)
 
-message.send(wf,'size',1211) 
+message.send(wf,'size',B) 
 
 os.close(rf)
 os.close(wf)

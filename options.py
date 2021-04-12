@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import argparse,sys
+import argparse,sys,subprocess
 
 SRC = ''
 DST = ''
@@ -154,6 +154,11 @@ parser.add_argument(
     nargs='*'
 )
 args = parser.parse_args()
+
+if args.list_only:
+    list_only_out = subprocess.run(['ls','-l',args.SRC],capture_output=True, text=True).stdout
+    if list_only_out != '':
+        print(list_only_out)
 
 options_map={
     'verbose':'-v',
