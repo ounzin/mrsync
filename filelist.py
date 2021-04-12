@@ -3,6 +3,8 @@
 import os, os.path,sys,subprocess
 from options import *
 
+#filelist return an array of dictionnar
+
 def ls(a):
     ls_out = []
     a = subprocess.run(['ls',a],capture_output=True, text=True).stdout
@@ -11,6 +13,17 @@ def ls(a):
         if b[i] != '':
             ls_out.append(b[i])
     return ls_out
+
+def get_stats(path):
+    stat_table = []
+    A = os.stat('test/a.txt')
+    B = str(A).split('(')
+    C = B[1].split(')')
+    D = C[0].split(',')
+    for i in range(len(D)):
+        inner_stat = D[i].split('=')
+        stat_table.append(inner_stat[1])
+    return stat_table
 
 
 def lister(addr_source):
@@ -21,22 +34,27 @@ def lister(addr_source):
         inner_path = os.path.join(addr_source,current[i])
         #print (inner_path)
         if os.path.isfile(inner_path):
-            inner_tab_file = []
+            inner_tab_file = {} 
             a = os.path.basename(inner_path)
+            absolute_path = os.path.realpath(inner_path)
+            relative_path = os.path.relpath(inner_path,SRC)
+            stat_table = get_stats(inner_path)
 
             # Getting file name and file stats ...
 
-            inner_tab_file.append(a) # file name
-            inner_tab_file.append(os.stat(inner_path).st_mode) #st_mode
-            inner_tab_file.append(os.stat(inner_path).st_ino) #st_ino
-            inner_tab_file.append(os.stat(inner_path).st_dev) #st_dev
-            inner_tab_file.append(os.stat(inner_path).st_nlink) #st_nlink
-            inner_tab_file.append(os.stat(inner_path).st_uid) #st_uid
-            inner_tab_file.append(os.stat(inner_path).st_gid) #st_gid
-            inner_tab_file.append(os.stat(inner_path).st_size) #st_size
-            inner_tab_file.append(os.stat(inner_path).st_atime) #st_atime
-            inner_tab_file.append(os.stat(inner_path).st_mtime) #st_mtime
-            inner_tab_file.append(os.stat(inner_path).st_ctime) #st_ctime
+            inner_tab_file['filename'] = a
+            inner_tab_file['absolute_path'] = absolute_path
+            inner_tab_file['relative_path'] = relative_path
+            inner_tab_file['st_mode'] = stat_table[0] # st_mode
+            inner_tab_file['st_ino'] = stat_table[1] # st_ino
+            inner_tab_file['st_dev'] = stat_table[2] # st_mode
+            inner_tab_file['st_nlink'] = stat_table[3] # st_nlink
+            inner_tab_file['st_uid'] = stat_table[4] # st_uid
+            inner_tab_file['st_gid'] = stat_table[5] # st_gid
+            inner_tab_file['st_size'] = stat_table[6] # st_size
+            inner_tab_file['st_atime'] = stat_table[7] # st_atime
+            inner_tab_file['st_mtime'] = stat_table[8] # st_mtime
+            inner_tab_file['st_ctime'] = stat_table[9] # st_ctime
 
             # End of getting file info
 
