@@ -3,7 +3,7 @@
 import os, os.path,sys,subprocess
 from options import *
 
-#filelist return an array of dictionnar
+#filelist return an array of dictionnary
 
 def ls(a):
     ls_out = []

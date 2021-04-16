@@ -11,9 +11,10 @@ def send(fd,tag,v): # fd : file descriptor, tag : nature of message
     info_out = pickle.dumps(info_out)
     size_m = len(info_out)
     size_m = size_m.to_bytes(3,byteorder='little')
-    print(size_m)
-    os.write(fd,size_m)
-    os.write(fd,info_out)
+    to_send = size_m + info_out
+    #os.write(fd,size_m)
+    #os.write(fd,info_out)
+    os.write(fd,to_send)
 
 
 def receive(fd):
@@ -28,6 +29,7 @@ def receive(fd):
         while size_buff > 16777216:
             buffer_overflow.append(os.read(fd,size_buff))
             size_m -= 16777216
+
     elif size_buff != 0:
         receive_out = os.read(fd,size_buff)
         s = pickle.loads(receive_out)

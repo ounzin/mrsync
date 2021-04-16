@@ -7,7 +7,7 @@ from filelist import *
 from options import *
 import message
  
-write_path = "/tmp/server_in"
+"""write_path = "/tmp/server_in"
 read_path = "/tmp/server_out"
  
 wf = os.open(write_path, os.O_SYNC | os.O_CREAT | os.O_RDWR)
@@ -19,4 +19,9 @@ B = lister(SRC)
 message.send(wf,'size',B) 
 
 os.close(rf)
-os.close(wf)
+os.close(wf)"""
+
+def receiver(source):
+    # ici -r sera utilisé ?
+    liste = lister(source)
+    return liste
