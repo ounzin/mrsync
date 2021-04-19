@@ -2,7 +2,8 @@
 
 import os, sys
 from options import *
-import filelist
+from filelist import *
 
-liste = []
-liste = filelist.lister(SRC)
+def sender(source):
+    liste = lister(source)
+    return liste

@@ -27,7 +27,7 @@ def get_stats(path):
 
 
 def lister(addr_source):
-    filelist = []
+    filelist = {}
     current = ls(addr_source)
 
     for i in range(len(current)):
@@ -58,19 +58,18 @@ def lister(addr_source):
 
             # End of getting file info
 
-            filelist.append(inner_tab_file)
+            filelist[relative_path] = inner_tab_file 
 
         elif os.path.islink(inner_path): # a verifier avec le prof
             realink = os.path.realpath(inner_path)
             print(realink)
             subdir1 = lister(realink)
-            for i in range(len(subdir1)):
-                filelist.append(subdir1[i])
+            #for i in range(len(subdir1)):
+                #filelist[subdir1[i]] = subdir1[i] 
+                #filelist.append(subdir1[i])
 
         elif os.path.isdir(inner_path):
             subdir2 = lister(inner_path)
-            for i in range(len(subdir2)):
-                filelist.append(subdir2[i])
         else:
             pass
     
