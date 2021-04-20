@@ -14,26 +14,28 @@ def is_different(a,b): #return True if a is different from b
         return False
 
 def compare(list_src,list_dst):
-    missing = []
-    a = len(list_src)
-    for i in range(a):
-        b = list_src[i]
-        if list_src[i] in list_dst:
-            pass
-        else:
-            missing.append(list_src[i])
+    missing = {}
+    for k1,v1 in list_src.items():
+        """
+        dest_keys = list_dst.keys()
+        miss_keys = missing.keys()
+        if k1 in dest_keys:
+            if k1 not in miss_keys:
+                missing[k1] = list_src[k1]"""
+        for k2,v2 in list_dst.items():
+            if k1 == k2:
+                test = is_different(v1,v2)
+                if test:
+                    missing[k1] = v1
+                else:
+                    pass
     return missing
 
-
-A = [{'filename':'tester','size':10},{'filename':'ahmed','size':10},{'filename':'padel','size':9}]
+"""A = [{'filename':'tester','size':10},{'filename':'ahmed','size':10},{'filename':'padel','size':9}]
 D = [{'filename':'aaeaeaea','size':39}]
 B = [{'filename':'tester','size':10},{'filename':'ahmed','size':10},{'filename':'mshangama','size':13}]
 
-K = {'relative_path':'tester','st_size':10,'st_mtime':10}
-I = {'relative_path':'tester','st_size':110,'st_mtime':10}
-
-C = is_different(K,I)
-print(C)
-
+K = {'a': {'relative_path':'tester','st_size':11110,'st_mtime':10},'b': {'relative_path':'ahmed','st_size':0,'st_mtime':110}}
+I = {'b': {'relative_path':'tester','st_size':110,'st_mtime':10}}"""
             
             

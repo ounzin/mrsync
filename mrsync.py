@@ -2,7 +2,7 @@
 import os,sys,time,signal
 from options import *
 from sender import *
-import server, receiver, message,sender
+import server, receiver, message,sender,generator
 
 # Handle server and client 
 
@@ -16,7 +16,11 @@ pid = os.fork()
 if pid == 0: #son, execute server
     os.close(wf1)
     if mode == 'push' or mode == 'local' :
-        R = server.server(rf1)        
+        R = server.server(rf1)
+        #list_src = R[1]   
+        #pid_g = os.fork()
+        #if pid_g == 0: # server son, fork generator to compare files
+        #    generator.compare()
     else:
         pass #server.server_push
     sys.exit(0)    
