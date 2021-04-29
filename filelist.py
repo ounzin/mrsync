@@ -2,12 +2,17 @@
 
 import os, os.path,sys,subprocess
 from options import *
+import itertools
+
 
 #filelist return an array of dictionnary
 
 def ls(a):
     ls_out = []
-    a = subprocess.run(['ls',a],capture_output=True, text=True).stdout
+    if a == "*":
+        a = subprocess.run(['ls'],capture_output=True, text=True).stdout
+    else:
+        a = subprocess.run(['ls',a],capture_output=True, text=True).stdout
     b = a.split('\n')
     for i in range(len(b)):
         if b[i] != '':
@@ -16,7 +21,7 @@ def ls(a):
 
 def get_stats(path):
     stat_table = []
-    A = os.stat('test/a.txt')
+    A = os.stat(path)
     B = str(A).split('(')
     C = B[1].split(')')
     D = C[0].split(',')
@@ -30,19 +35,24 @@ def lister(addr_source):
     filelist = {}
     current = ls(addr_source)
 
+    if addr_source == "*":
+        addr_source = os.getcwd()
+        
     for i in range(len(current)):
+
         inner_path = os.path.join(addr_source,current[i])
-        #print (inner_path)
+        
         if os.path.isfile(inner_path):
             inner_tab_file = {} 
             a = os.path.basename(inner_path)
+        
             absolute_path = os.path.realpath(inner_path)
-            relative_path = os.path.relpath(inner_path,SRC)
+            relative_path = os.path.relpath(inner_path,addr_source)
             stat_table = get_stats(inner_path)
 
             # Getting file name and file stats ...
 
-            inner_tab_file['filename'] = a
+            inner_tab_file['filename'] = relative_path
             inner_tab_file['absolute_path'] = absolute_path
             inner_tab_file['relative_path'] = relative_path
             inner_tab_file['st_mode'] = stat_table[0] # st_mode
@@ -70,6 +80,7 @@ def lister(addr_source):
 
         elif os.path.isdir(inner_path):
             subdir2 = lister(inner_path)
+            filelist.update(subdir2)
         else:
             pass
     

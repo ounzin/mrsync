@@ -102,14 +102,17 @@ parser.add_argument(
 
 parser.add_argument(
     "--timeout=TIME",
-    action="store_true",
     help="set I/O timeout in seconds",
+    type=int,
+    default=5,
+    dest="timeout"
 )
 
 parser.add_argument(
     "--blocking-io",
     action="store_true",
     help="use blocking I/O for the remote shell",
+    dest="blocking"
 )
 
 parser.add_argument(

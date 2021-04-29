@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import os,sys
+import filelist
+from options import *
 
 def is_different(a,b): #return True if a is different from b
    
@@ -13,15 +15,18 @@ def is_different(a,b): #return True if a is different from b
     else:
         return False
 
-def compare(list_src,list_dst):
+def to_delete(list_src,list_dst):
+    to_del = compare(list_dst, list_src)
+    return to_del
+
+def comparator(list_src,list_dst):
     missing = {}
     for k1,v1 in list_src.items():
-        """
         dest_keys = list_dst.keys()
         miss_keys = missing.keys()
-        if k1 in dest_keys:
+        if k1 not in dest_keys:        
             if k1 not in miss_keys:
-                missing[k1] = list_src[k1]"""
+                missing[k1] = list_src[k1]
         for k2,v2 in list_dst.items():
             if k1 == k2:
                 test = is_different(v1,v2)
@@ -31,11 +36,23 @@ def compare(list_src,list_dst):
                     pass
     return missing
 
-"""A = [{'filename':'tester','size':10},{'filename':'ahmed','size':10},{'filename':'padel','size':9}]
-D = [{'filename':'aaeaeaea','size':39}]
-B = [{'filename':'tester','size':10},{'filename':'ahmed','size':10},{'filename':'mshangama','size':13}]
+def compare(list_src,list_dst):
+    missing = comparator(list_src, list_dst)
+    to_delete = comparator(list_dst, list_src)
+    # delete handler 
+    if args.delete:
+        for k,v in to_delete.items():
+            for k1,v1 in v.items():
+                to_del_path = v['absolute_path']
+                try:
+                    os.remove(to_del_path)
+                except:
+                    pass
+                break
+    return missing
 
-K = {'a': {'relative_path':'tester','st_size':11110,'st_mtime':10},'b': {'relative_path':'ahmed','st_size':0,'st_mtime':110}}
-I = {'b': {'relative_path':'tester','st_size':110,'st_mtime':10}}"""
-            
-            
+
+A = filelist.lister(SRC)
+B = filelist.lister(DST)
+
+C = compare(A,B)

@@ -7,7 +7,7 @@ from filelist import *
 from options import *
 from generator import *
 
-def server(rf): # mode local : server == receiver
+def server(rf,wf): # mode local : server == receiver
     list_dst = receiver.receiver(DST)
     list_rec = message.receive(rf) # ici je recupere (lecture) la liste grace à ma fonction message.receive
     a = list_rec[0]
@@ -15,9 +15,9 @@ def server(rf): # mode local : server == receiver
     pid = os.fork()
     if pid == 0:
         generated = compare(b,list_dst)
-    return a,b
-
-
+        tag = "missing"
+        message.send(wf, tag, generated)
+        sys.exit(0)
 
     
     

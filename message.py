@@ -11,10 +11,8 @@ def send(fd,tag,v): # fd : file descriptor, tag : nature of message
     info_out = pickle.dumps(info_out)
     size_m = len(info_out)
     size_m = size_m.to_bytes(3,byteorder='little')
-    to_send = size_m + info_out
     os.write(fd,size_m)
     os.write(fd,info_out)
-    #os.write(fd,to_send)
 
 
 def receive(fd):
@@ -37,4 +35,6 @@ def receive(fd):
         msg = s[1]
     return tag,msg
 
+def log():
+    ret
             
