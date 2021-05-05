@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os,sys,signal,time, socket
+import tester,letest
 
 def question_un():
     for i in range(3):
@@ -41,5 +42,18 @@ def question_six():
         get_file = clicsock.recv(1024)
     else:
         print("echec connexion")
+
+
 if __name__ == "__main__":
-    question_six()
+    (rf,wf) = os.pipe()
+
+    pid = os.fork()
+    if pid == 0:
+        os.close(rf)
+        tester.server(wf)
+        sys.exit(0)
+    else:
+        os.close(wf)
+        letest.client(rf)
+        os.wait()
+        sys.exit(0)

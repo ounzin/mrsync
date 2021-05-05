@@ -22,7 +22,7 @@ def receive(fd):
     size_buff = int.from_bytes(size_m,byteorder='little')
 
     if size_buff > 16777216 :
-        buffer_overflow = []
+        buffer_overflow = ""
         buffer_overflow_out = [] #a completer
         while size_buff > 16777216:
             buffer_overflow.append(os.read(fd,size_buff))
