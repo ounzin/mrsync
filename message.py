@@ -1,6 +1,19 @@
 #!/usr/bin/env python3
 import os, sys, pickle,time
 
+def byte_writer(a,fd):
+    rel = ''
+    size = os.read(fd, 1024)
+    #rel = size.decode('ascii')
+    if rel == '':
+        size = 0
+    else:
+        size = int(rel)
+    size += a
+    size = str(size)
+    size = size.encode('utf-8')
+    os.write(fd,size)
+
 def send(fd,tag,v): # fd : file descriptor, tag : nature of message
     info_out = [] 
     #        
@@ -8,12 +21,16 @@ def send(fd,tag,v): # fd : file descriptor, tag : nature of message
     info_out.append(v)
     #
     size_m = info_out.__sizeof__()
+    
     info_out = pickle.dumps(info_out)
     size_m = len(info_out)
+    
+    size_to_write = int(size_m) + 3
+
     size_m = size_m.to_bytes(3,byteorder='little')
     os.write(fd,size_m)
     os.write(fd,info_out)
-
+    return int(size_to_write)
 
 def receive(fd):
     tag = ''
@@ -35,6 +52,6 @@ def receive(fd):
         msg = s[1]
     return tag,msg
 
-def log():
+def make_log():
     ret
-            
+

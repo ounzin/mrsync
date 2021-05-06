@@ -22,7 +22,7 @@ parser.add_argument(
 parser.add_argument(
     "-q",
     "--quiet",
-    action="store_false",
+    action="store_true",
     help="suppress non-error messages",
 )
 
@@ -36,7 +36,7 @@ parser.add_argument(
 parser.add_argument(
     "-r",
     "--recursive",
-    action="store_false",
+    action="store_true",
     help=" recurse into directories",
 )   
 
@@ -149,6 +149,7 @@ parser.add_argument(
 parser.add_argument(
     "SRC",
     help="Adresse source",
+    nargs="+"
 )
 
 parser.add_argument(
@@ -195,33 +196,33 @@ def username_finder(s):
 
 """ Affectation de l'adresse source et de la destination (si définie) & verifications """
 SRC = args.SRC
-if args.DST:
-    DST = args.DST[0]
 
-src_point_tester = point_finder(SRC)
-dst_point_tester = point_finder(DST)
+if len(SRC) >= 2:
+    DST = SRC[-1]
+elif len(SRC) == 1:
+    SRC = SRC[0]
 
-if SRC and DST == '': #mrsync [OPTION]... SRC 
-    print('local src')
 
-if SRC and DST != '': #mrsync [OPTION]... SRC [SRC]... [DEST] (includes dest optional or nor)
-    #Search : or :: and assign modes
-    
-    if src_point_tester == False and dst_point_tester == False: #source et destination sur même machine local
-         mode = 'local'
-    if src_point_tester == True and dst_point_tester == False: #source distante, destination local
-        mode = 'pull'
-        SRC_user = username_finder(SRC)
+def mode_finder(SRC,DST):
+    src_point_tester = point_finder(SRC)
+    dst_point_tester = point_finder(DST)
+
+    if SRC and DST == '': #mrsync [OPTION]... SRC 
+        print('local src')
+
+    if SRC and DST != '': #mrsync [OPTION]... SRC [SRC]... [DEST] (includes dest optional or nor)
+        #Search : or :: and assign modes
         
-    if src_point_tester == False and dst_point_tester == True : #source local, destination distante
-        mode = 'push'
-        DST_user = username_finder(DST)
-        
-    if src_point_tester == True and dst_point_tester == True : #source et destination sur même machine distante
-        mode = 'local'
-   
-for v in options_map.values():
-    based_options.append(v)
-
-#for k in args.__dict__:
- # print (k)
+        if src_point_tester == False and dst_point_tester == False: #source et destination sur même machine local
+            mode = 'local'
+        if src_point_tester == True and dst_point_tester == False: #source distante, destination local
+            mode = 'pull'
+            SRC_user = username_finder(SRC)
+            
+        if src_point_tester == False and dst_point_tester == True : #source local, destination distante
+            mode = 'push'
+            DST_user = username_finder(DST)
+            
+        if src_point_tester == True and dst_point_tester == True : #source et destination sur même machine distante
+            mode = 'local'
+    return mode

@@ -41,39 +41,40 @@ def lister(addr_source):
     for i in range(len(current)):
         inner_path = os.path.join(addr_source,current[i])
         if os.path.isdir(inner_path):
-            #Dir is also a file
-            aa = os.path.dirname(addr_source)
-            inner_tab_file = {} 
-            a = os.path.basename(inner_path)
-            
-            absolute_path = os.path.realpath(inner_path)
-            relative_path = os.path.relpath(inner_path,addr_source)
-            
-            
-            stat_table = get_stats(inner_path) 
+            if args.recursive: # recurse into directories
+                #Dir is also a file
+                aa = os.path.dirname(addr_source)
+                inner_tab_file = {} 
+                a = os.path.basename(inner_path)
+                
+                absolute_path = os.path.realpath(inner_path)
+                relative_path = os.path.relpath(inner_path,addr_source)
+                
+                
+                stat_table = get_stats(inner_path) 
 
-            # Getting dir name and dir stats ...
+                # Getting dir name and dir stats ...
 
-            inner_tab_file['type'] = 'dir'
-            inner_tab_file['filename'] = relative_path
-            inner_tab_file['absolute_path'] = absolute_path
-            inner_tab_file['relative_path'] = relative_path
-            inner_tab_file['st_mode'] = stat_table[0] # st_mode
-            inner_tab_file['st_ino'] = stat_table[1] # st_ino
-            inner_tab_file['st_dev'] = stat_table[2] # st_mode
-            inner_tab_file['st_nlink'] = stat_table[3] # st_nlink
-            inner_tab_file['st_uid'] = stat_table[4] # st_uid
-            inner_tab_file['st_gid'] = stat_table[5] # st_gid
-            inner_tab_file['st_size'] = stat_table[6] # st_size
-            inner_tab_file['st_atime'] = stat_table[7] # st_atime
-            inner_tab_file['st_mtime'] = stat_table[8] # st_mtime
-            inner_tab_file['st_ctime'] = stat_table[9] # st_ctime
+                inner_tab_file['type'] = 'dir'
+                inner_tab_file['filename'] = relative_path
+                inner_tab_file['absolute_path'] = absolute_path
+                inner_tab_file['relative_path'] = relative_path
+                inner_tab_file['st_mode'] = stat_table[0] # st_mode
+                inner_tab_file['st_ino'] = stat_table[1] # st_ino
+                inner_tab_file['st_dev'] = stat_table[2] # st_mode
+                inner_tab_file['st_nlink'] = stat_table[3] # st_nlink
+                inner_tab_file['st_uid'] = stat_table[4] # st_uid
+                inner_tab_file['st_gid'] = stat_table[5] # st_gid
+                inner_tab_file['st_size'] = stat_table[6] # st_size
+                inner_tab_file['st_atime'] = stat_table[7] # st_atime
+                inner_tab_file['st_mtime'] = stat_table[8] # st_mtime
+                inner_tab_file['st_ctime'] = stat_table[9] # st_ctime
 
-            # End of getting dir info
+                # End of getting dir info
 
-            filelist[relative_path] = inner_tab_file
-            subdir2 = lister(inner_path)
-            filelist.update(subdir2)
+                filelist[relative_path] = inner_tab_file
+                subdir2 = lister(inner_path)
+                filelist.update(subdir2)
 
         elif os.path.isfile(inner_path):
             inner_tab_file = {} 

@@ -12,5 +12,3 @@ def receiver(source):
     rep = os.path.realpath(source)
     liste = lister(rep)
     return liste
-
-A  = receiver(DST)

@@ -20,19 +20,19 @@ def is_different(a,b): #return True if a is different from b
     else:
         return False
 
-def to_delete(list_src,list_dst):
-    to_del = compare(list_dst, list_src)
-    return to_del
-
 def comparator(list_src,list_dst):
     missing = {}
+    
     for k1,v1 in list_src.items():
         dest_keys = list_dst.keys()
         miss_keys = missing.keys()
+        
         if k1 not in dest_keys:        
             if k1 not in miss_keys:
                 missing[k1] = list_src[k1]
         for k2,v2 in list_dst.items():
+            print(v1)
+            print(v2)
             if k1 == k2:
                 test = is_different(v1,v2)
                 if test:
@@ -41,10 +41,15 @@ def comparator(list_src,list_dst):
                     pass
     return missing
 
+def to_deletee(src,dst):
+    to_del = comparator(dst, src)
+    return to_del
+
 def compare(src,dst,list_src,list_dst):
+    
     missing = comparator(list_src, list_dst) # files and dir in src but not in dst
     missing_files = {}
-    to_delete = comparator(list_dst, list_src)
+    to_delete = to_deletee(list_src, list_dst)
     # delete handler 
     if args.delete:
         for k,v in to_delete.items():
@@ -55,6 +60,14 @@ def compare(src,dst,list_src,list_dst):
                 except:
                     pass
                 break
+    #force handler 
+    if args.force:
+        for k,v in to_delete.items():
+            if v['type'] == 'dir':
+                try:
+                    os.rmdir(v['absolute_path'])
+                except:
+                    pass
     #list-only handler
     if args.list_only:
         print(missing)
