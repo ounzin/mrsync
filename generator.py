@@ -7,16 +7,26 @@ import os.path
 import message
 
 def is_different(a,b): #return True if a is different from b
-    if args.size_only:
+    #Handle options
+
+    if args.size_only: # --size-only
         if a['st_size'] == b['st_size']:
             return False
 
+    if args.perms:#--perm
+        if a['st_mode'] != b['st_mode']:
+            return True
+
+    if args.times:# --times
+        if a['st_mtime'] != b['st_mtime']:
+            return True
+
     if a['relative_path'] != b['relative_path']:
         return True
+        
     elif a['st_size'] != b['st_size']:
         return True
-    elif a['st_mtime'] != b['st_mtime']:
-        return True
+
     else:
         return False
 
@@ -31,8 +41,6 @@ def comparator(list_src,list_dst):
             if k1 not in miss_keys:
                 missing[k1] = list_src[k1]
         for k2,v2 in list_dst.items():
-            print(v1)
-            print(v2)
             if k1 == k2:
                 test = is_different(v1,v2)
                 if test:
@@ -68,11 +76,12 @@ def compare(src,dst,list_src,list_dst):
                     os.rmdir(v['absolute_path'])
                 except:
                     pass
-    #list-only handler
-    if args.list_only:
-        print(missing)
-        sys.exit(0)
-            
+
+    if(len(SRC)>=2):       
+        pass  
+        #if args.list_only:
+        #    print(missing)
+    
     # create missing dirs
     for key,value in missing.items():
         for key1,value1 in value.items():

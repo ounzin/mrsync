@@ -74,8 +74,9 @@ def sync(SRC,DST):
             missing_files = message.receive(rf2) # return missing files in dst
             received_byte += missing_files.__sizeof__()
             
-            if(args.list_only):
+            if args.list_only:
                 sys.exit(0)
+
             os.write(actions,b'Envoi des fichers manquants \n') #log    
             for k,v in missing_files[1].items():
                 try:
@@ -128,10 +129,13 @@ def sync(SRC,DST):
     
 # Lancement de la synchronisation    
 
-if len(SRC) == 1: # SRC seul est passé en paramètre
+if len_SRC == 1: # SRC seul est passé en paramètre
     if args.list_only:
         print(lister(SRC))
-if len(SRC) >= 2:
+        sys.exit(0)
+    pass
+        
+if len_SRC >= 2:
     for i in range(len(SRC)-1):
         sync(str(SRC[i]),DST)
 
@@ -161,3 +165,5 @@ try: # remove action file after making all operations if exist !
 except:
     pass
 signal.alarm(0)
+
+#Fin programme

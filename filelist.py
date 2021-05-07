@@ -8,6 +8,7 @@ import itertools
 #filelist return an array of dictionnary
 
 def ls(a):
+    print(a)
     ls_out = []
     if a == "*":
         a = subprocess.run(['ls'],capture_output=True, text=True).stdout
@@ -18,6 +19,7 @@ def ls(a):
         if b[i] != '':
             ls_out.append(b[i])
     return ls_out
+
 
 def get_stats(path):
     stat_table = []
@@ -108,9 +110,6 @@ def lister(addr_source):
         elif os.path.islink(inner_path): # a verifier avec le prof
             realink = os.path.realpath(inner_path)
             subdir1 = lister(realink)
-            #for i in range(len(subdir1)):
-                #filelist[subdir1[i]] = subdir1[i] 
-                #filelist.append(subdir1[i])
         else:
             pass
     return filelist

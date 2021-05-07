@@ -2,6 +2,7 @@
 import argparse,sys,subprocess
 
 SRC = ''
+len_SRC = 0
 DST = ''
 SRC_user = ''
 DST_user = ''
@@ -104,7 +105,7 @@ parser.add_argument(
     "--timeout=TIME",
     help="set I/O timeout in seconds",
     type=int,
-    default=5,
+    default=0,
     dest="timeout"
 )
 
@@ -159,10 +160,6 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-#if args.list_only:
-#    list_only_out = subprocess.run(['ls','-l',args.SRC],capture_output=True, text=True).stdout
-#    if list_only_out != '':
-#        print(list_only_out)
 
 options_map={
     'verbose':'-v',
@@ -197,13 +194,18 @@ def username_finder(s):
 """ Affectation de l'adresse source et de la destination (si définie) & verifications """
 SRC = args.SRC
 
+len_SRC = len(SRC)
+
 if len(SRC) >= 2:
     DST = SRC[-1]
 elif len(SRC) == 1:
     SRC = SRC[0]
+else:
+    pass
 
 
 def mode_finder(SRC,DST):
+    global mode
     src_point_tester = point_finder(SRC)
     dst_point_tester = point_finder(DST)
 
