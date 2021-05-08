@@ -24,6 +24,7 @@ if args.timeout:
     signal.signal(signal.SIGALRM, alarm_handler)
     signal.alarm(args.timeout)
 
+
 # Handle server and client 
 def sync(SRC,DST):
     global duree
@@ -36,8 +37,12 @@ def sync(SRC,DST):
     (rf1,wf1) = os.pipe() # client to server 
     (rf2,wf2) = os.pipe() # server to client 
 
+    (rf3,wf3) = os.pipe() #client to server ssh
+    (rf4,wf4) = os.pipe() #server to client ssh
+
     receive_msg = {}
     mode = mode_finder(SRC, DST)
+
     pid = os.fork()
     if pid == 0: #son, execute server
         os.close(wf1)
@@ -45,11 +50,7 @@ def sync(SRC,DST):
 
         if  mode == 'local' :
             os.write(actions,b'Mode de transmission de donnees : Local \n')
-            
             server.server(SRC,DST,rf1,wf2)
-        elif mode == 'push':
-            os.write(actions,b'Mode de transmission de donnees : Push \n')
-            pass
         else:
             pass #server.server_push
         sys.exit(0)    
@@ -120,8 +121,34 @@ def sync(SRC,DST):
                 print("Erreur d'envoi du message signalant la fin de transmission")
 
             os.waitpid(pid,0)
-        elif mode == 'push':
-            print("ssh handle")
+
+    ###################### SSH HANDLER
+
+        if mode == 'push': #mode SSH        
+
+            if args.server:
+                print("avant lecture")
+                z = os.read(rf3, 1)
+                print(z)
+                print("distant : ", os.getresuid())     
+
+            if not args.server:
+                pid1 = os.fork()
+                if pid1 == 0:
+                    exec_args = ['ssh','-e','none','-l','distant','localhost','--']
+                    exec_args.append(sys.argv[0])
+                    exec_args.append('--server')
+                    for i in range(1,len(sys.argv)):
+                        exec_args.append(sys.argv[i])
+                    try:
+                        os.execvp(exec_args[0],exec_args[0:])
+                    except:
+                        os.write(actions, "Erreur lancement ssh")
+                else:
+                    print("ounzin : ", os.getresuid())
+                    os.write(wf3, b'Bonjour')   
+                    os.waitpid(pid1, 0)
+
         os.write(actions,b'Fin de la synchronisation \n')    
 
     tps2 = time.time()

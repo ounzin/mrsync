@@ -12,7 +12,9 @@ based_options = []
 #Parsing...
 
 parser = argparse.ArgumentParser(prog='mrsync', description="Here is a short summary of the options available in mrsync. Please refer "+
-"to the detailed description below for a complete description.")
+"to the detailed description below for a complete description.",usage="Mrsync is used to make a synchronisation between"+
+"one or many source and only one destination. This version is powered by Ahmed ADJIBADE and Yanis Allouche")
+
 parser.add_argument(
     "-v",
     "--verbose",
@@ -145,6 +147,11 @@ parser.add_argument(
     "--list-only",
     action="store_true",
     help="list the files instead of copying them",
+)
+parser.add_argument(
+    "--server",
+    action="store_true",
+    help="used in ssh mode, don't type it in commande line"
 )
 
 parser.add_argument(

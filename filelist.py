@@ -8,7 +8,6 @@ import itertools
 #filelist return an array of dictionnary
 
 def ls(a):
-    print(a)
     ls_out = []
     if a == "*":
         a = subprocess.run(['ls'],capture_output=True, text=True).stdout

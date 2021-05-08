@@ -10,8 +10,9 @@ from generator import *
 def server(SRC,DST,rf,wf): # mode local : server == receiver
     list_dst = receiver.receiver(DST)
     list_rec = message.receive(rf) # ici je recupere (lecture) la liste grace à ma fonction message.receive
-    a = list_rec[0]
-    b = list_rec[1]
+    a = list_rec[0] #tag
+    b = list_rec[1] #message
+
     pid = os.fork()
     if pid == 0:
         generated = compare(SRC,DST,b,list_dst)
@@ -19,9 +20,10 @@ def server(SRC,DST,rf,wf): # mode local : server == receiver
         message.send(wf, tag, generated)
         
         for k,v in generated.items():
-             
              # création du fichier dans la destination
              file_split_value = str(os.path.realpath(SRC)+'/')
+             if args.server:
+                file_split_value = str(os.path.realpath(DST)+'/')
              to_create = str(v['absolute_path'])
              to_create_tab = to_create.split(file_split_value)
              file_create_path = str(os.path.join(DST,to_create_tab[1]))
@@ -31,6 +33,7 @@ def server(SRC,DST,rf,wf): # mode local : server == receiver
                 
                 file_des = os.open(file_create_path,os.O_WRONLY | os.O_CREAT | os.O_TRUNC) 
                 counter = int(starter[1])
+
                 if counter < 2:
                     recu = message.receive(rf)
                     os.write(file_des,recu[1])

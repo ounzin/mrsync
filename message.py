@@ -52,6 +52,3 @@ def receive(fd):
         msg = s[1]
     return tag,msg
 
-def make_log():
-    ret
-
