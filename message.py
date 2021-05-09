@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Authors : ADJIBADE Ahmed - ALLOUCHE Yanis
+
 import os, sys, pickle,time
 
 def byte_writer(a,fd):
@@ -38,17 +40,20 @@ def receive(fd):
     size_m = os.read(fd,3)
     size_buff = int.from_bytes(size_m,byteorder='little')
 
-    if size_buff > 16777216 :
-        buffer_overflow = ""
-        buffer_overflow_out = [] #a completer
-        while size_buff > 16777216:
-            buffer_overflow.append(os.read(fd,size_buff))
-            size_m -= 16777216
+    if size_buff != 0:
+        tag = ""
+        msg = ""
+    
+        if size_buff > 16777216 :
+            while size_buff > 16777216:
+                receive_out = os.read(fd, 16777216)
+                s = pickle.loads(receive_out)
+                msg += s[1]
+                tag = s[0]
 
-    elif size_buff != 0:
-        receive_out = os.read(fd,size_buff)
-        s = pickle.loads(receive_out)
-        tag = s[0]
-        msg = s[1]
-    return tag,msg
-
+        else :
+            receive_out = os.read(fd,size_buff)
+            s = pickle.loads(receive_out)
+            tag = s[0]
+            msg = s[1]
+        return tag,msg

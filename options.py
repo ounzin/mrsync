@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Authors : ADJIBADE Ahmed - ALLOUCHE Yanis
+
 import argparse,sys,subprocess
 
 SRC = ''
@@ -32,7 +34,7 @@ parser.add_argument(
 parser.add_argument(
     "-a",
     "--archive",
-    action="store_false",
+    action="store_true",
     help=" archive mode; same as -rpt (no -H)",
 )  
 
@@ -53,7 +55,7 @@ parser.add_argument(
 parser.add_argument(
     "-d",
     "--dirs",
-    action="store_false",
+    action="store_true",
     help=" transfer directories without recursing",
 )  
 
@@ -168,25 +170,13 @@ parser.add_argument(
 args = parser.parse_args()
 
 
-options_map={
-    'verbose':'-v',
-    'quiet':'-q',
-    'archive':'-a',
-    'recursive':'-r',
-    'update':'-u',
-    'dirs':'-d',
-    'hard_links':'-H',
-    'perms':'-p',
-    'times':'-t',
-}
-
 #End parsing
 
 ##############################################################################################
 
 #Values and mode Handler 
 
-def point_finder(s):
+def point_finder(s): # a function to detect if a str contains : or ::
     a = s.find(':')
     b = s.find('::')
     if a!=-1 or b!=-1:
@@ -194,11 +184,12 @@ def point_finder(s):
     else:
         return False
 
-def username_finder(s):
+def username_finder(s): # a function to detect user name 
     a = s.split('@')
     return a[0]
 
-""" Affectation de l'adresse source et de la destination (si définie) & verifications """
+# Affectation de l'adresse source et de la destination (si définie) & verifications 
+
 SRC = args.SRC
 
 len_SRC = len(SRC)
@@ -211,27 +202,29 @@ else:
     pass
 
 
-def mode_finder(SRC,DST):
+def mode_finder(SRC,DST): # a function to detect mode
     global mode
     src_point_tester = point_finder(SRC)
     dst_point_tester = point_finder(DST)
 
-    if SRC and DST == '': #mrsync [OPTION]... SRC 
+    if SRC and DST == '': # mrsync [OPTION]... SRC 
         print('local src')
 
-    if SRC and DST != '': #mrsync [OPTION]... SRC [SRC]... [DEST] (includes dest optional or nor)
-        #Search : or :: and assign modes
+    if SRC and DST != '': 
+
+        # Search : or :: and assign modes
         
-        if src_point_tester == False and dst_point_tester == False: #source et destination sur même machine local
+        if src_point_tester == False and dst_point_tester == False: # local source and dest
             mode = 'local'
-        if src_point_tester == True and dst_point_tester == False: #source distante, destination local
+
+        if src_point_tester == True and dst_point_tester == False: # distant source, local dest
             mode = 'pull'
             SRC_user = username_finder(SRC)
             
-        if src_point_tester == False and dst_point_tester == True : #source local, destination distante
+        if src_point_tester == False and dst_point_tester == True : # local source, distant dest
             mode = 'push'
             DST_user = username_finder(DST)
-            
-        if src_point_tester == True and dst_point_tester == True : #source et destination sur même machine distante
+
+        if src_point_tester == True and dst_point_tester == True : # source and dest local
             mode = 'local'
     return mode
